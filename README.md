@@ -4,4 +4,4 @@
 
 1. pip install aim==4.0.0a1
 2. cd chatbot_logger && pip install .
-3. aim ui --package chatbot_logger
+3. aim up --package chatbot_logger

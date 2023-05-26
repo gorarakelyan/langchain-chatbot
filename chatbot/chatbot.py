@@ -27,7 +27,7 @@ tools = [
     ),
 ]
 
-llm=ChatOpenAI(temperature=0, openai_api_key="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", model_name='gpt-3.5-turbo')
+llm=ChatOpenAI(temperature=0, openai_api_key="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", model_name='gpt-3.5-turbo')
 aim_cll = AimCallbackHandler(username=username)
 agent_chain = initialize_agent(tools, llm,
                                agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION,

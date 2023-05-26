@@ -1,0 +1,10 @@
+setup.py
+src/chatbot_logger/__init__.py
+src/chatbot_logger.egg-info/PKG-INFO
+src/chatbot_logger.egg-info/SOURCES.txt
+src/chatbot_logger.egg-info/dependency_links.txt
+src/chatbot_logger.egg-info/not-zip-safe
+src/chatbot_logger.egg-info/top_level.txt
+src/chatbot_logger/logging/__init__.py
+src/chatbot_logger/logging/chat.py
+src/chatbot_logger/logging/user_analytics.py

@@ -21,7 +21,7 @@ from chatbot_logger import UserActivity, Session
 # ui.select(usernames)
 
 try:
-    username = state['user_analytics/user_detail.py']['username']
+    username = state['users/user.py']['username']
 except:
     username = ''
 

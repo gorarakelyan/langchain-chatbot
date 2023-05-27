@@ -1,37 +1,72 @@
-from chatbot_logger import Session, MessagesSequence
-import json
 from datetime import datetime
+import json
 
-ui.header('Chatbot Logger')
+from chatbot_logger import Session, MessagesSequence
 
-sessions = Session.filter("")
-sessions = sorted(sessions, key=lambda sess: sess['params'].get('started'), reverse=True)
 
-table = ui.table({
-    'session': [sess['hash'] for sess in sessions],
-    'username': [sess['params'].get('username') for sess in sessions],
-    'time': [sess['params'].get('started') for sess in sessions],
-    'type': [sess['type'] for sess in sessions],
-}, {
-    'username': lambda x: x if x is not None else '-',
-    'time': lambda x: ui.text(datetime.fromtimestamp(x).strftime("%Y-%m-%d %H:%M:%S") if x is not None else '-'),
-})
+##################
+# Utils
+##################
 
-if table.focused_row:
-    focused_row = table.focused_row
-    ui.subheader(f'Session: {focused_row["session"]}')
+def get_sessions(query = '', param = None):
+    sessions = Session.filter(query)
+    sessions = sorted(sessions, key=lambda sess: sess['params'].get('started') or 0, reverse=True)
+    if param is not None:
+        return [session.get(param) for session in sessions]
+    return sessions
 
-    qa_sequences = MessagesSequence.filter(f's.name == "messages" and c.hash == "{focused_row["session"]}"')
+##################
+
+def sessions_overview():
+    sessions = get_sessions()
+
+    table = ui.table({
+        'session': [sess['hash'] for sess in sessions],
+        'model_name': [sess['params'].get('model') for sess in sessions],
+        'available_tools': [json.dumps(sess['params']['available_tools']) if sess['params'].get('available_tools') else '-' for sess in sessions],
+        'username': [sess['params'].get('username') for sess in sessions],
+        'time': [sess['params'].get('started') for sess in sessions],
+        'type': [sess['type'] for sess in sessions],
+    }, {
+        'username': lambda x: x if x is not None else '-',
+        'time': lambda x: ui.text(datetime.fromtimestamp(x).strftime("%Y-%m-%d %H:%M:%S") if x is not None else '-'),
+        'available_tools': lambda x: ui.json(json.loads(x)) if x != '-' else '-',
+    })
+
+    if table.focused_row:
+        history(table.focused_row['session'])
+
+def history(session_hash):
+    if not session_hash:
+        return
+
+    ui.subheader(f'Session "{session_hash}"')
+    ui.board_link('chatbot/session.py', 'Open details', state={'session_hash': session_hash})
+
+    qa_sequences = MessagesSequence.filter(f's.name == "messages" and c.hash == "{session_hash}"')
     qa_sequence = None
-
     if qa_sequences and len(qa_sequences):
         qa_sequence = qa_sequences[0]
 
-    if qa_sequence:
+    if qa_sequence is not None:
         values = qa_sequence['values']
-        ui.table({
-            'question': [r['question'] for r in qa_sequence['values']],
-            'answer': [r['answer'] for r in qa_sequence['values']],
+        history_table = ui.table({
+            'question': [r['question'] for r in values],
+            'answer': [r['answer'] for r in values],
+            'index': [step for (step, _) in enumerate(values)],
         })
 
-    ui.board_link('chatbot/single_session.py', 'View more details', state={'session_hash': focused_row["session"]})
+        if history_table.focused_row:
+            ui.text('Agent actions:')
+            step = history_table.focused_row['index']
+            ui.json(values[step])
+    else:
+        ui.text('No message history')
+
+##################
+# Page
+##################
+
+ui.header('ChatBot Usage Overview')
+
+sessions_overview()

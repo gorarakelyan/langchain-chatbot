@@ -15,23 +15,24 @@ from aimstack.asp import Metric
 class AimCallbackHandler(BaseCallbackHandler):
     def __init__(
             self,
-            username: str,
+            username,
     ) -> None:
         """Initialize callback handler."""
 
         super().__init__()
 
         self.repo = Repo.default()
-        self.username = username
         self.session = None
         self.messages = None
         self.user_activity = None
         self.user_actions = None
+        self.username = username
 
         self.tokens_usage_metric = None
         self.tokens_usage_input = None
         self.tokens_usage_output = None
         self.tokens_usage = None
+        self.used_tools = set()
 
         self.start_inp = None
         self.end_out = None
@@ -44,8 +45,6 @@ class AimCallbackHandler(BaseCallbackHandler):
             return
 
         self.session = Session()
-        self.session['started'] = time.time()
-        self.session['username'] = self.username
         self.messages = MessagesSequence(self.session, name='messages', context={})
         self.tokens_usage_input = Metric(self.session, name='token-usage-input', context={})
         self.tokens_usage_output = Metric(self.session, name='token-usage-output', context={})
@@ -106,21 +105,22 @@ class AimCallbackHandler(BaseCallbackHandler):
     def on_tool_start(
             self, serialized: Dict[str, Any], input_str: str, **kwargs: Any
     ) -> None:
-        print('TOOL START')
+        print('TOOL START', kwargs)
         print(input_str)
         self.agent_actions.append({
             'type': 'tool-start',
             'input': input_str,
         })
 
-
     def on_tool_end(self, output: str, **kwargs: Any) -> None:
-        print('TOOL END')
+        print('TOOL END', kwargs)
         print(output)
         self.agent_actions.append({
             'type': 'tool-end',
             'input': output,
         })
+        self.used_tools.add(kwargs.get('name'))
+        self.session.used_tools = list(self.used_tools)
 
 
     def on_agent_action(self, action: AgentAction, **kwargs: Any) -> Any:

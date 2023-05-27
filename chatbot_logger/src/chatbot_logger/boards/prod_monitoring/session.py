@@ -125,7 +125,7 @@ def user_info(session_hash):
 ##################
 
 try:
-    session_hash = state['chatbot/session.py']['session_hash']
+    session_hash = state['prod_monitoring/session.py']['session_hash']
 except:
     session_hash = ''
 

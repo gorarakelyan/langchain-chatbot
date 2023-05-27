@@ -22,15 +22,15 @@ def sessions_overview():
 
     table = ui.table({
         'session': [sess['hash'] for sess in sessions],
+        'version': [sess['params'].get('chatbot_version') for sess in sessions],
         'model_name': [sess['params'].get('model') for sess in sessions],
-        'available_tools': [json.dumps(sess['params']['available_tools']) if sess['params'].get('available_tools') else '-' for sess in sessions],
+        'available_tools': [(str([tool['name'] for tool in sess['params']['available_tools']])) if sess['params'].get('available_tools') else '-' for sess in sessions],
         'username': [sess['params'].get('username') for sess in sessions],
         'time': [sess['params'].get('started') for sess in sessions],
         'type': [sess['type'] for sess in sessions],
     }, {
         'username': lambda x: x if x is not None else '-',
         'time': lambda x: ui.text(datetime.fromtimestamp(x).strftime("%Y-%m-%d %H:%M:%S") if x is not None else '-'),
-        'available_tools': lambda x: ui.json(json.loads(x)) if x != '-' else '-',
     })
 
     if table.focused_row:
@@ -41,7 +41,7 @@ def history(session_hash):
         return
 
     ui.subheader(f'Session "{session_hash}"')
-    ui.board_link('chatbot/session.py', 'Open details', state={'session_hash': session_hash})
+    ui.board_link('prod_monitoring/session.py', 'Open details', state={'session_hash': session_hash})
 
     qa_sequences = MessagesSequence.filter(f's.name == "messages" and c.hash == "{session_hash}"')
     qa_sequence = None
@@ -67,6 +67,6 @@ def history(session_hash):
 # Page
 ##################
 
-ui.header('ChatBot Usage Overview')
+ui.header('ChatBot Production Monitoring')
 
 sessions_overview()

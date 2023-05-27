@@ -1,6 +1,5 @@
 from copy import deepcopy
-from typing import Any, Dict, List, Optional, Union
-import time
+from typing import Any, Dict, List
 
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.schema import AgentAction, AgentFinish, LLMResult
@@ -11,6 +10,7 @@ from chatbot_logger import (
     UserActivity, UserActions, UserAction,
 )
 from aimstack.asp import Metric
+
 
 class AimCallbackHandler(BaseCallbackHandler):
     def __init__(

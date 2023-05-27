@@ -1,6 +1,8 @@
 import click
+import os
+from dotenv import dotenv_values
 
-from chatbot.chatbot.chatbot import chatbot
+from chatbot.chatbot import chatbot
 
 
 @click.group()
@@ -8,16 +10,12 @@ def entrypoint():
     pass
 
 
-@entrypoint.command(name='run')
+@entrypoint.command
 def run():
-    agent, cb = chatbot()
+    # Load config
+    here = os.path.abspath(os.path.dirname(__file__))
+    config_file_path = os.path.abspath(os.path.join(here, '..', '..', '..', '.env'))
+    config = dotenv_values(config_file_path)
 
-    while True:
-        msg = input('Message:\n')
-        try:
-            response = agent.run(input=msg, callbacks=[cb])
-        except ValueError as e:
-            response = str(e)
-            if not response.startswith("Could not parse LLM output: `"):
-                raise e
-        response = response.removeprefix("Could not parse LLM output: `").removesuffix("`")
+    # Run the bot
+    chatbot(config['serpapi_key'], config['openai_key'])

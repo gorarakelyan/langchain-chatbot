@@ -1,7 +1,5 @@
 import time
 
-from dotenv import dotenv_values
-
 from langchain.agents import Tool
 from langchain.agents import AgentType
 from langchain.memory import ConversationBufferMemory
@@ -16,13 +14,11 @@ from chatbot.chatbot.utils import (
 )
 
 
-def chatbot(serpapi_key, openai_key):
+def chatbot(serpapi_key, openai_key, dev_mode):
     # Configs
     model_name = 'gpt-3.5-turbo'
     username = get_user()
     version = get_version()
-
-    config = dotenv_values('.env')
 
     # ChatBot implementation
     memory = ConversationBufferMemory(memory_key="chat_history")
@@ -44,7 +40,7 @@ def chatbot(serpapi_key, openai_key):
                                    memory=memory)
 
     # Init the callback
-    aim_cb = AimCallbackHandler(username)
+    aim_cb = AimCallbackHandler(username, dev_mode)
     aim_cb.session[...] = {
         'chatbot_version': version,
         'model': model_name,

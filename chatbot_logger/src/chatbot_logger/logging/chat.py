@@ -34,3 +34,11 @@ class MessagesSequence(Sequence[Message]):
 
 class Session(Container):
     pass
+
+
+class SessionProd(Session):
+    pass
+
+
+class SessionDev(Session):
+    pass

@@ -1,7 +1,7 @@
 from datetime import datetime
 import json
 
-from chatbot_logger import Session, MessagesSequence
+from chatbot_logger import SessionProd, MessagesSequence
 
 
 ##################
@@ -9,7 +9,7 @@ from chatbot_logger import Session, MessagesSequence
 ##################
 
 def get_sessions(query = '', param = None):
-    sessions = Session.filter(query)
+    sessions = SessionProd.filter(query)
     sessions = sorted(sessions, key=lambda sess: sess['params'].get('started') or 0, reverse=True)
     if param is not None:
         return [session.get(param) for session in sessions]
@@ -41,7 +41,7 @@ def history(session_hash):
         return
 
     ui.subheader(f'Session "{session_hash}"')
-    ui.board_link('prod_monitoring/session.py', 'Open details', state={'session_hash': session_hash})
+    ui.board_link('chat/session.py', 'Open details', state={'session_hash': session_hash})
 
     qa_sequences = MessagesSequence.filter(f's.name == "messages" and c.hash == "{session_hash}"')
     qa_sequence = None
@@ -67,6 +67,6 @@ def history(session_hash):
 # Page
 ##################
 
-ui.header('ChatBot Production Monitoring')
+ui.header('Production Monitoring')
 
 sessions_overview()

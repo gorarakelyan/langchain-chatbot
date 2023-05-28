@@ -6,7 +6,8 @@ from langchain.schema import AgentAction, AgentFinish, LLMResult
 
 from aim import Repo
 from chatbot_logger import (
-    Session, MessagesSequence, Message,
+    Session, SessionDev, SessionProd,
+    MessagesSequence, Message,
     UserActivity, UserActions, UserAction,
 )
 from aimstack.asp import Metric
@@ -16,6 +17,7 @@ class AimCallbackHandler(BaseCallbackHandler):
     def __init__(
             self,
             username,
+            dev_mode,
     ) -> None:
         """Initialize callback handler."""
 
@@ -27,6 +29,7 @@ class AimCallbackHandler(BaseCallbackHandler):
         self.user_activity = None
         self.user_actions = None
         self.username = username
+        self.dev_mode = dev_mode
 
         self.tokens_usage_metric = None
         self.tokens_usage_input = None
@@ -44,7 +47,11 @@ class AimCallbackHandler(BaseCallbackHandler):
         if self.session is not None:
             return
 
-        self.session = Session()
+        if self.dev_mode:
+            self.session = SessionDev()
+        else:
+            self.session = SessionProd()
+
         self.messages = MessagesSequence(self.session, name='messages', context={})
         self.tokens_usage_input = Metric(self.session, name='token-usage-input', context={})
         self.tokens_usage_output = Metric(self.session, name='token-usage-output', context={})

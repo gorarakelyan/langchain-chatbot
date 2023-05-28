@@ -5,11 +5,13 @@ from chatbot_logger.logging.user_analytics import *
 
 __all__ = [
     'Session', 'SessionProd', 'SessionDev',
+    'Experiment', 'Release',
     'MessagesSequence', 'UserActivity', 'UserActions',
 ]
 
 __aim_types__ = [
     Session, SessionProd, SessionDev,
+    Experiment, Release,
     MessagesSequence, UserActivity, UserActions,
 ]
 

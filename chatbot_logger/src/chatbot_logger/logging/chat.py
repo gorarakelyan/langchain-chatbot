@@ -42,3 +42,12 @@ class SessionProd(Session):
 
 class SessionDev(Session):
     pass
+
+
+class Experiment(Container):
+    pass
+
+
+class Release(Container):
+    pass
+

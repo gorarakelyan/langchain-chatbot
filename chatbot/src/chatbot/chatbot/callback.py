@@ -18,6 +18,7 @@ class AimCallbackHandler(BaseCallbackHandler):
             self,
             username,
             dev_mode,
+            experiment,
     ) -> None:
         """Initialize callback handler."""
 
@@ -28,6 +29,7 @@ class AimCallbackHandler(BaseCallbackHandler):
         self.messages = None
         self.user_activity = None
         self.user_actions = None
+        self.experiment = experiment
         self.username = username
         self.dev_mode = dev_mode
 

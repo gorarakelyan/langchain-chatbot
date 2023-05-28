@@ -77,7 +77,7 @@ def chatbot(serpapi_key, openai_key, dev_mode):
         'username': username,
         'started': time.time(),
         'available_tools': [{ 'name': tool.name, 'description': tool.description } for tool in tools],
-        'experiment': experiment.hash,
+        'experiment': experiment.hash if experiment else None,
         'release': release.hash,
     }
 

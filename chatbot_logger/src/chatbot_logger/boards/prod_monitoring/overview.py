@@ -34,14 +34,15 @@ def sessions_overview():
     })
 
     if table.focused_row:
-        history(table.focused_row['session'])
+        history(table.focused_row['session'], table.focused_row['version'])
 
-def history(session_hash):
+def history(session_hash, version):
     if not session_hash:
         return
 
     ui.subheader(f'Session "{session_hash}"')
     ui.board_link('chat/session.py', 'Open details', state={'session_hash': session_hash})
+    ui.board_link('development/release.py', 'Open release', state={'version': version})
 
     qa_sequences = MessagesSequence.filter(f's.name == "messages" and c.hash == "{session_hash}"')
     qa_sequence = None

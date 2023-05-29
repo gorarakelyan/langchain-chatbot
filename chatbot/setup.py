@@ -1,13 +1,18 @@
 import os
 from setuptools import setup, find_packages
 
+here = os.path.abspath(os.path.dirname(__file__))
 
-version_file = 'src/chatbot/VERSION'
+# Version
+version_file = os.path.join(here, 'src', 'chatbot', 'VERSION')
 with open(version_file) as vf:
     __version__ = vf.read().strip()
 
-here = os.path.abspath(os.path.dirname(__file__))
+# Requirements
+with open(os.path.join(here, 'requirements.txt'), 'r') as f:
+    requirements = f.read().splitlines()
 
+# Package info
 NAME = 'chatbot'
 DESCRIPTION = 'LangChain-based ChatBot'
 VERSION = __version__
@@ -18,6 +23,7 @@ setup(
     version=VERSION,
     description=DESCRIPTION,
     python_requires=REQUIRES_PYTHON,
+    install_requires=requirements,
     packages=find_packages("src"),
     package_dir={"": "src"},
     zip_safe=False,

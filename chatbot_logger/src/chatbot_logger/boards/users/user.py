@@ -66,9 +66,8 @@ def overview(username):
         return
 
     ui.header('User Activity')
-    ui.subheader('User details')
-    ui.json(user)
-
+    ui.subheader(f'User "{user["params"].get("username")}"')
+    # ui.json(user)
 
 def plot_sessions_count(df):
     import plotly.graph_objects as go

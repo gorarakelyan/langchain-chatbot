@@ -117,7 +117,7 @@ def user_sessions(username):
 ##################
 
 try:
-    username = state['users/user.py']['username']
+    username = state['analytics.py']['username']
 except:
     username = ''
 

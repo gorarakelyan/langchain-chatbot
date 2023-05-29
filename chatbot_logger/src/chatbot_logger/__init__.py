@@ -1,7 +1,7 @@
 __aim_boards__ = 'boards'
 
 from chatbot_logger.logging.chat import *
-from chatbot_logger.logging.user_analytics import *
+from chatbot_logger.logging.analytics import *
 
 __all__ = [
     'Session', 'SessionProd', 'SessionDev',

@@ -41,7 +41,7 @@ def history(session_hash, version):
         return
 
     ui.subheader(f'Session "{session_hash}"')
-    ui.board_link('chat/session.py', 'Open details', state={'session_hash': session_hash})
+    ui.board_link('sessions.py', 'Open details', state={'session_hash': session_hash})
     ui.board_link('development/release.py', 'Open release', state={'version': version})
 
     qa_sequences = MessagesSequence.filter(f's.name == "messages" and c.hash == "{session_hash}"')

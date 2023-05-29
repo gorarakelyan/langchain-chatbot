@@ -116,7 +116,7 @@ def user_info(session_hash):
         return
 
     ui.text(f'User: {username}')
-    ui.board_link('users/user.py', 'User page', state={
+    ui.board_link('analytics.py', 'User page', state={
         'username': username,
     })
 
@@ -125,7 +125,7 @@ def user_info(session_hash):
 ##################
 
 try:
-    session_hash = state['chat/session.py']['session_hash']
+    session_hash = state['sessions.py']['session_hash']
 except:
     session_hash = ''
 

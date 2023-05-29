@@ -72,7 +72,7 @@ def sessions_overview():
     })
 
     if table.focused_row:
-        ui.board_link('chat/session.py', 'Open details', state={'session_hash': table.focused_row['session']})
+        ui.board_link('sessions.py', 'Open details', state={'session_hash': table.focused_row['session']})
         ui.board_link('development/release.py', 'Open release', state={'version': table.focused_row['version']})
 
 def releases():

@@ -27,6 +27,8 @@ def experiment(exp_hash):
         ui.text('Pick an experiment')
         return
 
+    ui.header(f'Experiment "{exp_hash}"')
+
     overview, memory, llm, tools, agent = ui.tabs(['Overview', 'Memory', 'LLM', 'Tools', 'Agent'])
 
     overview.json({

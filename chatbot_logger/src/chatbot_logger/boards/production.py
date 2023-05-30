@@ -18,7 +18,13 @@ def get_sessions(query = '', param = None):
 ##################
 
 def sessions_overview():
-    sessions = get_sessions()
+    search = ui.form('Search')
+    version = search.text_input('')
+    query = ''
+    if version:
+        query = f'str(c.chatbot_version).startswith("{version}")'
+
+    sessions = get_sessions(query)
 
     table = ui.table({
         'session': [sess['hash'] for sess in sessions],

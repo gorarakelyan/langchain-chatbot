@@ -51,7 +51,7 @@ def history(session_hash):
     if not session_hash:
         return
 
-    ui.subheader('Session history')
+    ui.subheader('History')
 
     qa_sequences = MessagesSequence.filter(f's.name == "messages" and c.hash == "{session_hash}"')
     qa_sequence = None
@@ -77,7 +77,7 @@ def session_cost(session_hash):
     if not session_hash:
         return
 
-    ui.subheader('Session tokens usage')
+    ui.subheader('Tokens usage')
 
     # Calculate cost
     metrics = Metric.filter(f'c.hash == "{session_hash}"')
@@ -108,7 +108,7 @@ def user_info(session_hash):
     if session is None:
         return
 
-    ui.subheader('Session user')
+    ui.subheader('User')
 
     username = session['params'].get('username')
     if not username:

@@ -47,8 +47,10 @@ def experiments():
         'experiment': [sess['hash'] for sess in experiments],
         'version': [sess['params'].get('version') for sess in experiments],
         'time': [sess['params'].get('started') for sess in experiments],
+        'open': [sess['hash'] for sess in experiments],
     }, {
         'time': lambda x: ui.text(datetime.fromtimestamp(x).strftime("%Y-%m-%d %H:%M:%S") if x is not None else '-'),
+        'open': lambda x: ui.board_link('development/experiment.py', 'Experiment Page', state={'experiment_hash': x}),
     })
 
 def sessions_overview():
@@ -66,14 +68,13 @@ def sessions_overview():
         'model_name': [sess['params'].get('model') for sess in sessions],
         'available_tools': [(str([tool['name'] for tool in sess['params']['available_tools']])) if sess['params'].get('available_tools') else '-' for sess in sessions],
         'time': [sess['params'].get('started') for sess in sessions],
-        'type': [sess['type'] for sess in sessions],
+        'open': [sess['hash'] for sess in sessions],
+        'release': [sess['params'].get('chatbot_version') for sess in sessions],
     }, {
         'time': lambda x: ui.text(datetime.fromtimestamp(x).strftime("%Y-%m-%d %H:%M:%S") if x is not None else '-'),
+        'open': lambda x: ui.board_link('sessions.py', 'Open', state={'session_hash': x}),
+        'release': lambda x: ui.board_link('development/release.py', 'Release Page', state={'version': x}),
     })
-
-    if table.focused_row:
-        ui.board_link('sessions.py', 'Open details', state={'session_hash': table.focused_row['session']})
-        ui.board_link('development/release.py', 'Open release', state={'version': table.focused_row['version']})
 
 def releases():
     releases = get_releases()
@@ -88,9 +89,10 @@ def releases():
         'release': [sess['hash'] for sess in releases],
         'version': [sess['params'].get('version') for sess in releases],
         'time': [sess['params'].get('started') for sess in releases],
-        'type': [sess['type'] for sess in releases],
+        'open': [sess['params'].get('version') for sess in releases],
     }, {
         'time': lambda x: ui.text(datetime.fromtimestamp(x).strftime("%Y-%m-%d %H:%M:%S") if x is not None else '-'),
+        'open': lambda x: ui.board_link('development/release.py', 'Open', state={'version': x}),
     })
 
 ##################

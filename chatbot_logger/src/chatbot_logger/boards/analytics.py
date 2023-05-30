@@ -65,8 +65,7 @@ def overview(username):
         ui.text('User not found')
         return
 
-    ui.header('User Activity')
-    ui.subheader(f'User "{user["params"].get("username")}"')
+    ui.header(f'User Activity: "{user["params"].get("username")}"')
     # ui.json(user)
 
 def plot_sessions_count(df):
@@ -82,9 +81,8 @@ def user_sessions(username):
     if not user:
         return
 
-    ui.subheader('User Activity')
     all_user_sessions = SessionProd.filter(f'c.username == "{username}"')
-    ui.text(f'User sessions count: {len(all_user_sessions)}')
+    ui.text(f'Sessions count: {len(all_user_sessions)}')
 
     # ui.json(all_user_sessions)
     timestamps = [session['params'].get('started') or 0 for session in all_user_sessions]
@@ -92,17 +90,17 @@ def user_sessions(username):
         return
 
     ui.text('Breakdown by:')
-    breakdown_type = ui.toggle_button(left_value='days', right_value='hours')
+    breakdown_type = ui.toggle_button(left_value='Days', right_value='Hours')
 
-    if breakdown_type == 'hours':
+    if breakdown_type == 'Hours':
         data = hourly_count(timestamps)
     else:
         data = daily_count(timestamps)
 
-    ui.text('Visualize with:')
-    vis_tye = ui.toggle_button(left_value='table', right_value='chart')
+    ui.text('Visualize via:')
+    vis_tye = ui.toggle_button(left_value='Table', right_value='Chart')
 
-    if vis_tye == 'table':
+    if vis_tye == 'Table':
         ui.table({
             'date': [int(i.timestamp()) for i in data['date'].tolist()],
             'count': [int(i) for i in data['count'].tolist()],

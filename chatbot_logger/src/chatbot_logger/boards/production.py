@@ -27,10 +27,13 @@ def sessions_overview():
         'available_tools': [(str([tool['name'] for tool in sess['params']['available_tools']])) if sess['params'].get('available_tools') else '-' for sess in sessions],
         'username': [sess['params'].get('username') for sess in sessions],
         'time': [sess['params'].get('started') for sess in sessions],
-        'type': [sess['type'] for sess in sessions],
+        'open': [sess['hash'] for sess in sessions],
+        'release': [sess['params'].get('chatbot_version') for sess in sessions],
     }, {
         'username': lambda x: x if x is not None else '-',
         'time': lambda x: ui.text(datetime.fromtimestamp(x).strftime("%Y-%m-%d %H:%M:%S") if x is not None else '-'),
+        'open': lambda x: ui.board_link('sessions.py', 'Open', state={'session_hash': x}),
+        'release': lambda x: ui.board_link('development/release.py', 'Release Page', state={'version': x}),
     })
 
     if table.focused_row:
@@ -41,8 +44,6 @@ def history(session_hash, version):
         return
 
     ui.subheader(f'Session "{session_hash}"')
-    ui.board_link('sessions.py', 'Open details', state={'session_hash': session_hash})
-    ui.board_link('development/release.py', 'Open release', state={'version': version})
 
     qa_sequences = MessagesSequence.filter(f's.name == "messages" and c.hash == "{session_hash}"')
     qa_sequence = None
@@ -50,6 +51,7 @@ def history(session_hash, version):
         qa_sequence = qa_sequences[0]
 
     if qa_sequence is not None:
+        ui.text(f'Session history:')
         values = qa_sequence['values']
         history_table = ui.table({
             'question': [r['question'] for r in values],

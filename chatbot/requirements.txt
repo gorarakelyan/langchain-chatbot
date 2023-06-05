@@ -2,3 +2,4 @@ langchain
 aim==4.0.0a6
 click
 python-dotenv
+openai

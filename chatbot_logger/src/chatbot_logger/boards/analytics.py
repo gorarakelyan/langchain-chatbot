@@ -1,4 +1,5 @@
 from datetime import datetime
+from collections import Counter
 
 from chatbot_logger import UserActivity, SessionProd, UserActions
 
@@ -20,38 +21,31 @@ def get_users(query = '', param = None):
         return [session.get(param) or session['params'].get(param) for session in sessions]
     return sessions
 
-
 def daily_count(unix_time_array):
-    import pandas as pd
     # Convert the array to datetime
-    datetime_array = pd.to_datetime(unix_time_array, unit='s')
+    datetime_array = [datetime.fromtimestamp(unix_time).date() for unix_time in unix_time_array]
 
-    # Create a pandas Series
-    s = pd.Series(1, index=datetime_array)
+    # Count occurrences per day
+    counter = Counter(datetime_array)
 
-    # Resample to daily and count
-    daily_counts = s.resample('D').count()
-
-    df_daily = pd.DataFrame(daily_counts, columns=['count']).reset_index()
-    df_daily.columns = ['date', 'count']
-
-    return df_daily
+    # Build list of tuples for output
+    return {
+        'date': [date.strftime("%Y-%m-%d %H:%M:%S") for date, count in sorted(counter.items())],
+        'count': [count for date, count in sorted(counter.items())],
+    }
 
 def hourly_count(unix_time_array):
-    import pandas as pd
     # Convert the array to datetime
-    datetime_array = pd.to_datetime(unix_time_array, unit='s')
+    datetime_array = [datetime.fromtimestamp(unix_time).replace(minute=0, second=0) for unix_time in unix_time_array]
 
-    # Create a pandas Series
-    s = pd.Series(1, index=datetime_array)
+    # Count occurrences per hour
+    counter = Counter(datetime_array)
 
-    # Resample to hourly and count
-    hourly_counts = s.resample('H').count()
-
-    df_hourly = pd.DataFrame(hourly_counts, columns=['count']).reset_index()
-    df_hourly.columns = ['date', 'count']
-
-    return df_hourly
+    # Build list of tuples for output
+    return {
+        'date': [date.strftime("%Y-%m-%d %H:%M:%S") for date, count in sorted(counter.items())],
+        'count': [count for date, count in sorted(counter.items())],
+    }
 
 ##################
 
@@ -67,14 +61,6 @@ def overview(username):
 
     ui.header(f'User Activity: "{user["params"].get("username")}"')
     # ui.json(user)
-
-def plot_sessions_count(df):
-    import plotly.graph_objects as go
-
-    fig = go.Figure(data=go.Bar(x=df['date'], y=df['count']))
-    fig.update_layout(title_text='Count of Sessions', xaxis_title='Date', yaxis_title='Count')
-
-    return fig
 
 def user_sessions(username):
     user = get_user(username)
@@ -101,14 +87,16 @@ def user_sessions(username):
     vis_tye = ui.toggle_button(left_value='Table', right_value='Chart')
 
     if vis_tye == 'Table':
-        ui.table({
-            'date': [int(i.timestamp()) for i in data['date'].tolist()],
-            'count': [int(i) for i in data['count'].tolist()],
-        }, {
-            'date': lambda x: ui.text(datetime.fromtimestamp(x).strftime("%Y-%m-%d %H:%M:%S") if x is not None else '-'),
-        })
+        ui.table(data)
     else:
-        ui.plotly(plot_sessions_count(data))
+        d = []
+        for i in zip(data['date'], data['count']):
+            d.append({
+                'date': i[0],
+                'count': i[1],
+                'name': str(i[0]),
+            })
+        ui.bar_chart(data=d, x='date', y='count', color=['name'])
 
 ##################
 # Page

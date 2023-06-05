@@ -8,8 +8,8 @@ The repo contains two python packages:
 
 1. Clone the repo
 2. Add `.env` file at `chatbot/chatbot` with `serpapi_key` and `openai_key` keys
-2. Install the logger `cd chatbot_logger && pip install -e .`
-3. Install the chatbot `cd chatbot && pip install .`
+2. Install the logger `cd chatbot_logger && pip install -e .` (in editable mode)
+3. Install the chatbot `cd chatbot && pip install -e .` (in editable mode)
 
 ## Run
 

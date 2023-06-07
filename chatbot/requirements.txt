@@ -3,3 +3,4 @@ aim==4.0.0a7
 click
 python-dotenv
 openai
+google-search-results

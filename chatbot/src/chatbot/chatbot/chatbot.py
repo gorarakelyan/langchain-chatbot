@@ -64,7 +64,8 @@ def chatbot(serpapi_key, openai_key, dev_mode):
         tools, llm,
         agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION,
         verbose=True,
-        memory=memory
+        memory=memory,
+        handle_parsing_errors="Check your output and make sure it conforms!"
     )
     if experiment is not None:
         experiment['agent'] = agent_chain.__dict__
@@ -84,10 +85,11 @@ def chatbot(serpapi_key, openai_key, dev_mode):
     # Run the bot
     while True:
         msg = input('Message:\n')
-        try:
-            response = agent_chain.run(input=msg, callbacks=[aim_cb])
-        except ValueError as e:
-            response = str(e)
-            if not response.startswith("Could not parse LLM output: `"):
-                raise e
-        response = response.removeprefix("Could not parse LLM output: `").removesuffix("`")
+        response = agent_chain.run(input=msg, callbacks=[aim_cb])
+        # try:
+        #     response = agent_chain.run(input=msg, callbacks=[aim_cb])
+        # except ValueError as e:
+        #     response = str(e)
+        #     if not response.startswith("Could not parse LLM output: `"):
+        #         raise e
+        # response = response.removeprefix("Could not parse LLM output: `").removesuffix("`")

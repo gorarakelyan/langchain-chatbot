@@ -80,14 +80,14 @@ class AimCallbackHandler(BaseCallbackHandler):
             self, serialized: Dict[str, Any], prompts: List[str], **kwargs: Any
     ) -> None:
         """Run when LLM starts."""
-        print('LLM START')
+        # print('LLM START')
         res = deepcopy(prompts)
-        print(res)
+        # print(res)
 
     def on_llm_end(self, response: LLMResult, **kwargs: Any) -> None:
-        print('LLM END')
+        # print('LLM END')
         result = deepcopy(response)
-        print(result)
+        # print(result)
         self.tokens_usage_input.track(result.llm_output['token_usage']['prompt_tokens'])
         self.tokens_usage_output.track(result.llm_output['token_usage']['completion_tokens'])
         self.tokens_usage.track(result.llm_output['token_usage']['total_tokens'])
@@ -101,29 +101,29 @@ class AimCallbackHandler(BaseCallbackHandler):
     def on_chain_start(
             self, serialized: Dict[str, Any], inputs: Dict[str, Any], **kwargs: Any
     ) -> None:
-        print('CHAIN START')
+        # print('CHAIN START')
         inputs_res = deepcopy(inputs)
         self.start_inp = inputs_res['input']
-        print(inputs_res)
+        # print(inputs_res)
 
     def on_chain_end(self, outputs: Dict[str, Any], **kwargs: Any) -> None:
-        print('CHAIN END')
+        # print('CHAIN END')
         outputs_res = deepcopy(outputs)
-        print(outputs_res)
+        # print(outputs_res)
 
     def on_tool_start(
             self, serialized: Dict[str, Any], input_str: str, **kwargs: Any
     ) -> None:
-        print('TOOL START', kwargs)
-        print(input_str)
+        # print('TOOL START', kwargs)
+        # print(input_str)
         self.agent_actions.append({
             'type': 'tool-start',
             'input': input_str,
         })
 
     def on_tool_end(self, output: str, **kwargs: Any) -> None:
-        print('TOOL END', kwargs)
-        print(output)
+        # print('TOOL END', kwargs)
+        # print(output)
         self.agent_actions.append({
             'type': 'tool-end',
             'input': output,
@@ -133,8 +133,8 @@ class AimCallbackHandler(BaseCallbackHandler):
 
 
     def on_agent_action(self, action: AgentAction, **kwargs: Any) -> Any:
-        print('AGENT ACTION')
-        print(action)
+        # print('AGENT ACTION')
+        # print(action)
         self.agent_actions.append({
             'type': 'agent-action',
             'tool': action.tool,
@@ -147,8 +147,8 @@ class AimCallbackHandler(BaseCallbackHandler):
             **kwargs: Any,
     ) -> Any:
         """Run on agent end."""
-        print('AGENT FINISH')
-        print(finish)
+        # print('AGENT FINISH')
+        # print(finish)
         self.end_out = finish.return_values['output']
         self.messages.track(Message(self.start_inp, self.end_out, self.agent_actions))
         self.start_inp = None

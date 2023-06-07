@@ -1,5 +1,5 @@
 langchain
-aim==4.0.0a6
+aim==4.0.0a7
 click
 python-dotenv
 openai

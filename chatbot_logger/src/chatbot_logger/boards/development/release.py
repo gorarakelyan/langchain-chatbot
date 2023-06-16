@@ -74,7 +74,9 @@ try:
 except:
     release_version = ''
 
-release_version = ui.select(options=get_releases('', 'version'), value=release_version)
+releases = get_releases('', 'version')
+default_release = releases.index(release_version) if release_version != '' else 0
+release_version = ui.select(options=releases, index=default_release)
 
 release(release_version)
 experiment(release_version)

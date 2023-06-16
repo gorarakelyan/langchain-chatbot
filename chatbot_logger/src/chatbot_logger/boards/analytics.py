@@ -107,7 +107,9 @@ try:
 except:
     username = ''
 
-username = ui.select(options=get_users('', 'username'), value=username)
+users = get_users('', 'username')
+default_user = users.index(username) if username != '' else 0
+username = ui.select(options=users, index=default_user)
 
 overview(username)
 user_sessions(username)

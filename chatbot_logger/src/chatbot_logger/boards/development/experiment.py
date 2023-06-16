@@ -51,6 +51,9 @@ try:
 except:
     exp_hash = ''
 
-exp_hash = ui.select(options=get_experiments('', 'hash'), value=exp_hash)
+experiments = get_experiments('', 'hash')
 
-experiment(exp_hash)
+if experiments:
+    default_exp = experiments.index(exp_hash) if exp_hash != '' else 0
+    exp_hash = ui.select(options=experiments, index=default_exp)
+    experiment(exp_hash)

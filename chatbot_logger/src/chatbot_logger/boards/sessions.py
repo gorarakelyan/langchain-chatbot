@@ -129,7 +129,9 @@ try:
 except:
     session_hash = ''
 
-session_hash = ui.select(options=get_sessions('', 'hash'), value=session_hash)
+sessions = get_sessions('', 'hash')
+default_session = sessions.index(session_hash) if session_hash != '' else 0
+session_hash = ui.select(options=sessions, index=default_session)
 
 overview(session_hash)
 history(session_hash)
